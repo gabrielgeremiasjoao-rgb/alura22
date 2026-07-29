@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portal Agrocampo - Leite & Corte</title>
+  <style>
+    /* Estilos Globais */
+    * { box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f2f5f3;
+      color: #2c3e50;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Cabeçalho */
+    header {
+      background: linear-gradient(135deg, #1b5e20, #2e7d32);
+      color: white;
+      text-align: center;
+      padding: 3rem 1rem 2rem 1rem;
+    }
+
+    header h1 { margin: 0; font-size: 2.5rem; }
+    header p { opacity: 0.9; margin-top: 0.5rem; }
+
+    /* Barra de Busca e Filtros */
+    .controls {
+      max-width: 900px;
+      margin: -20px auto 2rem auto;
+      background: white;
+      padding: 1rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .search-box {
+      flex: 1;
+      min-width: 200px;
+      padding: 10px 15px;
+      border: 1px solid #ccc;
+      border-radius: 20px;
+      font-size: 0.95rem;
+      outline: none;
+    }
+
+    .filter-btn {
+      background: #e8f5e9;
+      border: 1px solid #2e7d32;
+      color: #2e7d32;
+      padding: 8px 16px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: 0.2s;
+    }
+
+    .filter-btn.active, .filter-btn:hover {
+      background: #2e7d32;
+      color: white;
+    }
+
+    /* Layout do Conteúdo */
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 1rem 3rem 1rem;
+    }
+
+    .post {
+      background-color: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      overflow: hidden;
+      margin-bottom: 2.5rem;
+    }
+
+    .post-img {
+      width: 100%;
+      height: 380px;
+      object-fit: cover;
+    }
+
+    .post-content { padding: 2rem; }
+
+    .tag {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 15px;
+      font-size: 0.85rem;
+      font-weight: bold;
+      text-transform: uppercase;
+      margin-bottom: 0.8rem;
+    }
+
+    .tag-leite { background-color: #e3f2fd; color: #1565c0; }
+    .tag-corte { background-color: #ffebee; color: #c62828; }
+
+    /* Interações: Curtida e Comentários */
+    .interaction-area {
+      margin-top: 1.5rem;
+      padding-top: 1rem;
+      border-top: 1px solid #eee;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .like-btn {
+      background-color: #f1f1f1;
+      border: 2px solid #ccc;
+      color: #555;
+      padding: 8px 18px;
+      font-size: 0.95rem;
+      font-weight: bold;
+      border-radius: 25px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .like-btn.liked {
+      background-color: #e91e63;
+      border-color: #e91e63;
+      color: white;
+    }
+
+    /* Seção de Comentários */
+    .comments-section {
+      background: #fafafa;
+      padding: 1.5rem;
+      border-top: 1px solid #eee;
+    }
+
+    .comments-list {
+      list-style: none;
+      padding: 0;
+      margin: 1rem 0;
+    }
+
+    .comments-list li {
+      background: white;
+      padding: 10px 15px;
+      border-radius: 8px;
+      margin-bottom: 8px;
+      border: 1px solid #e0e0e0;
+      font-size: 0.9rem;
+    }
+
+    .comment-input-box {
+      display: flex;
+      gap: 10px;
+    }
+
+    .comment-input-box input {
+      flex: 1;
+      padding: 8px 12px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+
+    .comment-input-box button {
+      background-color: #2e7d32;
+      color: white;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>🌾 Portal Agrocampo</h1>
+    <p>Conhecimento especializado sobre Pecuária de Leite e Corte</p>
+  </header>
+
+  <div class="controls">
+    <input type="text" id="searchInput" class="search-box" placeholder="Buscar assuntos (ex: Red Angus, Holandesa, Pasto)..." onkeyup="filtrarTexto()">
+    <div>
+      <button class="filter-btn active" onclick="filtrarCategoria('todos', this)">Todos</button>
+      <button class="filter-btn" onclick="filtrarCategoria('leite', this)">Gado de Leite</button>
+      <button class="filter-btn" onclick="filtrarCategoria('corte', this)">Gado de Corte</button>
+    </div>
+  </div>
+
+  <div class="container">
+
+    <article class="post" data-category="leite">
+      <img class="post-img" src="https://images.unsplash.com/photo-1527153857715-3908f2bae5e8?auto=format&fit=crop&w=1000&q=80" alt="Vaca de Leite">
+      <div class="post-content">
+        <span class="tag tag-leite">Pecuária Leiteira</span>
+        <h2>O Universo da Produção de Leite 🥛</h2>
+        <p>A pecuária de leite exige rotina rigorosa, bem-estar animal extremo e nutrição de precisão para manter altas taxas diárias de produção com saúde e qualidade.</p>
+        
+        <div class="interaction-area">
+          <button class="like-btn" onclick="curtir(this, 'count1')">
+            ❤️ <span class="btn-text">Curtir</span>
+          </button>
+          <span id="count1" style="font-weight:bold;">142</span> curtidas
+        </div>
+      </div>
+
+      <div class="comments-section">
+        <h4>Comentários</h4>
+        <ul class="comments-list" id="comments1">
+          <li><strong>João Silva:</strong> Excelente conteúdo! A raça Jersey realmente dá um leite muito saboroso.</li>
+        </ul>
+        <div class="comment-input-box">
+          <input type="text" id="input1" placeholder="Escreva um comentário...">
+          <button onclick="adicionarComentario('input1', 'comments1')">Enviar</button>
+        </div>
+      </div>
+    </article>
+
+    <article class="post" data-category="corte">
+      <img class="post-img" src="https://images.unsplash.com/photo-1545468800-85cc9bc6ecf7?auto=format&fit=crop&w=1000&q=80" alt="Gado de Corte no Pasto">
+      <div class="post-content">
+        <span class="tag tag-corte">Pecuária de Corte</span>
+        <h2>Destaque da Raça: Red Angus 🐂🔴</h2>
+        <p>O Red Angus destaca-se pela excelente qualidade de carne, maciez e marmoreio superior. Com pelagem avermelhada e ausência de chifres (mocho), adapta-se muito bem ao cruzamento industrial e a diferentes manejos.</p>
+        
+        <div class="interaction-area">
+          <button class="like-btn" onclick="curtir(this, 'count2')">
+            ❤️ <span class="btn-text">Curtir</span>
+          </button>
+          <span id="count2" style="font-weight:bold;">310</span> curtidas
+        </div>
+      </div>
+
+      <div class="comments-section">
+        <h4>Comentários</h4>
+        <ul class="comments-list" id="comments2">
+          <li><strong>Carlos Eduardo:</strong> A maciez da carne Red Angus é excelente para churrasco!</li>
+        </ul>
+        <div class="comment-input-box">
+          <input type="text" id="input2" placeholder="Escreva um comentário...">
+          <button onclick="adicionarComentario('input2', 'comments2')">Enviar</button>
+        </div>
+      </div>
+    </article>
+
+    <article class="post" data-category="corte">
+      <img class="post-img" src="https://images.unsplash.com/photo-1570042707223-93361848529f?auto=format&fit=crop&w=1000&q=80" alt="Gado Nelore">
+      <div class="post-content">
+        <span class="tag tag-corte">Pecuária de Corte</span>
+        <h2>Entendendo a Pecuária de Corte 🥩</h2>
+        <p>A pecuária de corte é focada em ganho de peso, conformação de carcaça e eficiência alimentar durante as fases estratégicas de cria, recria e engorda.</p>
+        
+        <div class="interaction-area">
+          <button class="like-btn" onclick="curtir(this, 'count3')">
+            ❤️ <span class="btn-text">Curtir</span>
+          </button>
+          <span id="count3" style="font-weight:bold;">289</span> curtidas
+        </div>
+      </div>
+
+      <div class="comments-section">
+        <h4>Comentários</h4>
+        <ul class="comments-list" id="comments3">
+          <li><strong>Maria Souza:</strong> O Nelore é imbatível na resistência ao nosso clima tropical!</li>
+        </ul>
+        <div class="comment-input-box">
+          <input type="text" id="input3" placeholder="Escreva um comentário...">
+          <button onclick="adicionarComentario('input3', 'comments3')">Enviar</button>
+        </div>
+      </div>
+    </article>
+
+  </div>
+
+  <script>
+    // Função do Botão Curtir
+    function curtir(botao, idContador) {
+      const contador = document.getElementById(idContador);
+      const textoBotao = botao.querySelector('.btn-text');
+      let valor = parseInt(contador.innerText);
+
+      if (!botao.classList.contains('liked')) {
+        valor++;
+        botao.classList.add('liked');
+        textoBotao.innerText = 'Curtido!';
+      } else {
+        valor--;
+        botao.classList.remove('liked');
+        textoBotao.innerText = 'Curtir';
+      }
+      contador.innerText = valor;
+    }
+
+    // Função de Adicionar Comentário em Tempo Real
+    function adicionarComentario(inputId, listaId) {
+      const input = document.getElementById(inputId);
+      const lista = document.getElementById(listaId);
+
+      if (input.value.trim() !== "") {
+        const novoComentario = document.createElement('li');
+        novoComentario.innerHTML = `<strong>Leitor:</strong> ${input.value}`;
+        lista.appendChild(novoComentario);
+        input.value = "";
+      }
+    }
+
+    // Função para Filtrar por Categoria (Leite / Corte / Todos)
+    function filtrarCategoria(categoria, botaoClicado) {
+      document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+      botaoClicado.classList.add('active');
+
+      const posts = document.querySelectorAll('.post');
+      posts.forEach(post => {
+        if (categoria === 'todos' || post.getAttribute('data-category') === categoria) {
+          post.style.display = 'block';
+        } else {
+          post.style.display = 'none';
+        }
+      });
+    }
+
+    // Função de Busca Por Palavras no Texto
+    function filtrarTexto() {
+      const termo = document.getElementById('searchInput').value.toLowerCase();
+      const posts = document.querySelectorAll('.post');
+
+      posts.forEach(post => {
+        const texto = post.innerText.toLowerCase();
+        post.style.display = texto.includes(termo) ? 'block' : 'none';
+      });
+    }
+  </script>
+
+</body>
+</html>
